@@ -1,6 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http'; // 1. IMPORTA ESTO
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'; // 1. IMPORTA HttpClient
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 
@@ -8,6 +8,6 @@ import { routes } from './app/app.routes';
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient() // 3. AÑADE ESTO
+    provideHttpClient(withInterceptorsFromDi()) // 3. AÑADE ESTO para que ApiService funcione
   ]
 }).catch(err => console.error(err));
