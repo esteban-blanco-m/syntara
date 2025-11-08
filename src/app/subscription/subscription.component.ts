@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router'; // <--- ¡DEBE ESTAR ESTO!
 
 @Component({
-  selector: 'app-suscription',
+  selector: 'app-subscription',
   standalone: true,
   imports: [CommonModule, RouterLink], // <--- ¡DEBE ESTAR EN LOS IMPORTS!
   templateUrl: './subscription.component.html',
   styleUrls: ['./subscription.component.scss']
 })
-export class SuscriptionComponent {
+export class SubscriptionComponent {
 }

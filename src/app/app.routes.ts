@@ -5,7 +5,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { SuscriptionComponent } from './subscription/subscription.component';
+import { SubscriptionComponent } from './subscription/subscription.component';
 import { PaymentComponent } from './payment/payment.component';
 import { authGuard } from './auth.guard';
 
@@ -20,7 +20,7 @@ export const routes: Routes = [
   // Rutas protegidas (también ocultamos los botones)
   {
     path: 'suscription',
-    component: SuscriptionComponent,
+    component: SubscriptionComponent,
     canActivate: [authGuard],
     data: { hideHeaderLinks: true }
   },
