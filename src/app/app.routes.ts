@@ -1,10 +1,10 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 // Importa los componentes
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+// CAMBIO: Importamos 'SubscriptionComponent' (con 'b')
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { PaymentComponent } from './payment/payment.component';
 import { authGuard } from './auth.guard';
@@ -19,7 +19,9 @@ export const routes: Routes = [
 
   // Rutas protegidas (también ocultamos los botones)
   {
-    path: 'suscription',
+    // CAMBIO: La ruta ahora es 'subscription' (con 'b')
+    path: 'subscription',
+    // CAMBIO: El componente ahora es 'SubscriptionComponent' (con 'b')
     component: SubscriptionComponent,
     canActivate: [authGuard],
     data: { hideHeaderLinks: true }
