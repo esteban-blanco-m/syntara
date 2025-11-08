@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// 1. IMPORTA ActivatedRoute y ActivatedRouteSnapshot
+// 1. IMPORTA TODO LO NECESARIO
 import { NavigationEnd, Router, RouterLink, RouterOutlet, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { filter } from 'rxjs/operators'; // 2. IMPORTA 'filter'
 
@@ -19,13 +19,17 @@ export class AppComponent {
   // 4. Inyecta ActivatedRoute
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
 
-    // 5. Esta es la lógica MÁS ROBUSTA
+    // 5. Esta es la lógica MÁS ROBUSTA que sí funciona
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       // Usamos la función 'getDeepestRouteSnapshot'
       const deepest = this.getDeepestRouteSnapshot(this.activatedRoute.snapshot);
+
+      // Revisa si 'hideHeaderLinks' es true en el 'data' de la ruta más profunda
       const hide = deepest?.data['hideHeaderLinks'] === true;
+
+      // Actualiza la variable
       this.showHeaderLinks = !hide;
     });
   }

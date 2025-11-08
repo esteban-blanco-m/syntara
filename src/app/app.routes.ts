@@ -10,18 +10,24 @@ import { PaymentComponent } from './payment/payment.component';
 import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
-  // CORRECTO: Esta ruta NO debe tener 'data'.
+  // Ruta Home (Pública) - NO LLEVA DATA
   { path: '', component: HomeComponent },
 
-  // CORRECTO: Estas rutas SÍ deben tener 'data'
-  { path: 'login', component: LoginComponent, data: { hideHeaderLinks: true } },
-  { path: 'register', component: RegisterComponent, data: { hideHeaderLinks: true } },
+  // Rutas donde SÍ se ocultan los botones - AÑADE DATA
+  {
+    path: 'login',
+    component: LoginComponent,
+    data: { hideHeaderLinks: true } // <-- AÑADIDO
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    data: { hideHeaderLinks: true } // <-- AÑADIDO
+  },
 
   // Rutas protegidas (también ocultamos los botones)
   {
-    // CAMBIO: La ruta ahora es 'subscription' (con 'b')
     path: 'subscription',
-    // CAMBIO: El componente ahora es 'SubscriptionComponent' (con 'b')
     component: SubscriptionComponent,
     canActivate: [authGuard],
     data: { hideHeaderLinks: true }
