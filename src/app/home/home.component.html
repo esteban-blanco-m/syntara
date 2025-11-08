@@ -1,0 +1,65 @@
+<main class="main-content">
+
+  <div class="main-logo-section">
+    <img src="assets/images/logo.png" alt="Syntara Main Logo" class="main-logo">
+  </div>
+
+  <h2 class="search-prompt">¿Qué producto quieres buscar hoy?</h2>
+
+  <div class="search-section">
+
+    <div class="search-input-wrapper product-input">
+      <input type="text" placeholder="Buscar producto (Producto - Marca)..." class="search-input">
+    </div>
+
+    <div class="search-input-wrapper quantity-input">
+      <input type="number" placeholder="Cantidad" class="search-input hide-spin-buttons" min="1" max="9999" value="1">
+    </div>
+
+    <div class="search-input-wrapper measure-select">
+      <select class="search-input">
+        <option value="" disabled selected>Medida</option>
+
+        <optgroup label="Conteo">
+          <option value="unidades">Unidades</option>
+          <option value="pares">Pares</option>
+          <option value="docenas">Docenas</option>
+          <option value="cajas">Cajas</option>
+          <option value="paquetes">Paquetes</option>
+          <option value="bolsas">Bolsas</option>
+          <option value="kits">Kits / Sets</option>
+        </optgroup>
+
+        <optgroup label="Peso (Masa)">
+          <option value="kilogramos">Kilogramos (kg)</option>
+          <option value="gramos">Gramos (g)</option>
+          <option value="libras">Libras (lb)</option>
+        </optgroup>
+
+        <optgroup label="Peso Tradicional">
+          <option value="arrobas">Arrobas (arroba)</option>
+          <option value="quintales">Quintales</option>
+          <option value="bultos">Bultos</option>
+        </optgroup>
+
+        <optgroup label="Volumen">
+          <option value="litros">Litros (L)</option>
+          <option value="mililitros">Mililitros (ml)</option>
+          <option value="galones">Galones</option>
+        </optgroup>
+
+        <optgroup label="Longitud/Área">
+          <option value="metros">Metros (m)</option>
+          <option value="centimetros">Centímetros (cm)</option>
+          <option value="metros_cuadrados">Metros Cuadrados (m²)</option>
+        </optgroup>
+
+      </select>
+    </div>
+
+    <button class="search-button">Buscar</button>
+  </div>
+  <footer class="footer">
+    <p>Syntara • Los precios hablan, Syntara escucha. ©</p>
+  </footer>
+</main>

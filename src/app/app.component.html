@@ -1,0 +1,17 @@
+<header class="header">
+  <div class="logo-container">
+    <img
+      src="assets/images/logopequ.png"
+      alt="Syntara Logo"
+      class="header-logo header-home-button"
+      routerLink="/">
+    <span class="header-title" routerLink="/">Syntara</span>
+  </div>
+
+  <nav class="navigation">
+    <a *ngIf="showHeaderLinks" routerLink="/suscription" class="nav-link">Suscríbete</a>
+    <a *ngIf="showHeaderLinks" routerLink="/login" class="nav-link">Iniciar Sesión</a>
+  </nav>
+</header>
+
+<router-outlet></router-outlet>

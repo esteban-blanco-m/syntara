@@ -1,0 +1,237 @@
+/* src/app/home/home.component.scss */
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding-top: 50px;
+  min-height: calc(100vh - 80px);
+}
+
+
+/* --- LOGO PRINCIPAL --- */
+.main-logo-section {
+  margin-bottom: 70px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 60px;
+  padding: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.main-logo {
+  display: block;
+  width: auto;
+  max-width: 400px;
+  height: auto;
+}
+
+/* --- TEXTO PRINCIPAL --- */
+.search-prompt {
+  font-family: 'Cabin', sans-serif;
+  color: #004b3a;
+  font-size: 48px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 55px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* --- BARRA DE BÚSQUEDA (AJUSTADA) --- */
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.search-input-wrapper {
+  /* ... (Estilos base sin cambios) ... */
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 60px;
+  padding: 0 35px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  height: 78px;
+  box-sizing: border-box;
+  transition: box-shadow 0.2s;
+}
+
+/* 💡 ESTILOS PARA LOS CAMPOS (AJUSTADOS FINAL) */
+.product-input {
+  /* Ahora es el más largo, con el resto de espacio disponible */
+  flex-grow: 5;
+  max-width: 650px; /* Aumento ligero */
+}
+
+.quantity-input {
+  /* 💡 Aumento de ancho para que "Cantidad" se lea */
+  flex-grow: 1.5; /* Aumento de la proporción */
+  max-width: 180px; /* 💡 Asegura que la palabra quepa */
+  padding: 0 15px;
+  justify-content: center;
+}
+
+.measure-select {
+  /* Más corto que Cantidad */
+  flex-grow: 1;
+  max-width: 160px; /* Reducido a 160px para dar más espacio a Producto y Cantidad */
+  padding: 0 25px;
+}
+
+.search-input {
+  /* ... (Fuente de 20px sin cambios) ... */
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  color: #333;
+  height: 100%;
+
+  &::placeholder {
+    color: #555;
+    opacity: 0.8;
+  }
+}
+
+/* 💡 Regla específica para Cantidad (el padding interno debe ser pequeño) */
+.quantity-input .search-input {
+  text-align: left; /* 💡 Alinea el texto a la izquierda */
+  max-width: 140px;
+  padding: 0 5px 0 10px; /* 💡 Añade un padding a la izquierda para el texto */
+}
+
+/* Para Chrome, Safari, Edge, Opera */
+.hide-spin-buttons::-webkit-outer-spin-button,
+.hide-spin-buttons::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+/* Para Firefox */
+.hide-spin-buttons[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+/* 💡 OCULTAR BOTONES DE SUBIR/BAJAR (Spin Buttons) */
+.hide-spin-buttons {
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  &[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+.quantity-input .search-input {
+  text-align: center;
+  max-width: 200px;
+  padding: 50px;
+}
+
+/* Estilos del Select (Medida) */
+.measure-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  padding-right: 20px;
+  color: #333;
+  font-size: 20px;
+}
+
+.measure-select optgroup,
+.measure-select option {
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.measure-select optgroup {
+  font-weight: bold;
+  color: #004b3a;
+  padding-top: 5px;
+}
+.hide-spin-buttons {
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none !important; /* Añadir !important para forzar */
+    margin: 0;
+  }
+
+  /* Firefox */
+  &[type=number] {
+    -moz-appearance: textfield !important;
+  }
+}
+
+
+/* --- BOTÓN DE BUSCAR --- */
+.search-button {
+  background-color: #54a78b;
+  color: white;
+  border: none;
+  border-radius: 60px;
+  padding: 0 50px;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  height: 78px;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: #4a9479;
+    transform: translateY(-1px);
+  }
+}
+
+/* --- FOOTER --- */
+.footer {
+  text-align: center;
+  padding-top: 120px;
+  color: #004b3a;
+  font-size: 18px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- BOTONES DE ARRIBA (header) --- */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 45px;
+}
+
+.header-buttons button {
+  font-size: 20px;
+  padding: 14px 34px;
+  border-radius: 50px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-logo img {
+  height: 55px;
+}
+
+.header-logo span {
+  font-size: 28px;
+  font-weight: 700;
+}

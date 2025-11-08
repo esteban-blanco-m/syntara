@@ -1,0 +1,53 @@
+/* src/styles.scss */
+
+/* 1. Importa las fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@600;700&family=Poppins:wght@400;500;600&display=swap');
+
+/* 2. Fuentes por defecto */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: 'Cabin', sans-serif;
+}
+
+/* * 3. 💡 ANULACIÓN GLOBAL PARA LA PÁGINA DE PAGO
+ * (Nuevo enfoque usando 'float' y 'width' para disminuir el largo)
+ */
+app-payment {
+
+  /* Forzamos la alineación del texto en los inputs */
+  .form-input {
+    text-align: left !important;
+  }
+
+  /* 💡 3A. FORZAMOS LA FILA CON FLOAT */
+
+  /* Contenedor padre: Usamos un "clearfix" para contener los floats */
+  .card-details-row {
+    &::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+
+  /* 💡 3B. FORZAMOS EL ANCHO (DISMINUIR EL LARGO) Y LA FLOTACIÓN */
+
+  .expiry-field {
+    float: left !important;
+    width: 100% !important; /* Ancho del 60% */
+    box-sizing: border-box; /* Para que el padding no afecte */
+    padding-right: 10px !important; /* Espacio entre ellos */
+  }
+
+  .cvc-field {
+    float: left !important;
+    width: 69% !important; /* Ancho del 40% */
+    box-sizing: border-box;
+    padding-left: 10px !important; /* Espacio entre ellos */
+  }
+}
