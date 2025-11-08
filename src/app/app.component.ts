@@ -1,28 +1,42 @@
-import { Component } from '@angular/core';
-// CAMBIO: Importar CommonModule y RouterLink
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// CAMBIO: Importar NavigationEnd, Router, RouterLink, RouterOutlet
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+// 1. IMPORTA ActivatedRoute y ActivatedRouteSnapshot
+import { NavigationEnd, Router, RouterLink, RouterOutlet, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { filter } from 'rxjs/operators'; // 2. IMPORTA 'filter'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  // CAMBIO: Añadir CommonModule y RouterLink a los imports
   imports: [CommonModule, RouterOutlet, RouterLink],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'] // Corregido a styleUrls (plural)
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'syntara';
+  // 3. El valor por defecto es 'true'
   showHeaderLinks: boolean = true;
 
-  constructor(private router: Router) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        // Esta lógica es para ocultar los enlaces en login/register
-        const routeData = this.router.routerState.root.firstChild?.snapshot.data;
-        this.showHeaderLinks = !routeData?.['hideHeaderLinks'];
-      }
+  // 4. Inyecta ActivatedRoute
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+
+    // 5. Esta es la lógica MÁS ROBUSTA
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      // Usamos la función 'getDeepestRouteSnapshot'
+      const deepest = this.getDeepestRouteSnapshot(this.activatedRoute.snapshot);
+      const hide = deepest?.data['hideHeaderLinks'] === true;
+      this.showHeaderLinks = !hide;
     });
+  }
+
+  // 6. Esta función 'helper' es la clave.
+  // Busca el 'data' en el último componente de la cadena de rutas.
+  private getDeepestRouteSnapshot(snapshot: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
+    let current = snapshot;
+    while (current.firstChild) {
+      current = current.firstChild;
+    }
+    return current;
   }
 }

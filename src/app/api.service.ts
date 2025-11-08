@@ -13,7 +13,7 @@ export class ApiService {
   // Esta es la IP que obtuviste en el "Paso 1A" del PC del backend.
   // Reemplaza '192.168.1.10' con la IP de tu PC 2.
   // CAMBIO: Actualizado al puerto 5000 de tu .env
-  private baseUrl = 'http://192.168.1.10:5000/api';
+  private baseUrl = 'http://192.168.4.217:5000/api';
   // -----------------------------
 
   constructor(private http: HttpClient, private authService: AuthService) { }

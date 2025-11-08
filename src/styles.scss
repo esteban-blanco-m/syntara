@@ -25,8 +25,6 @@ app-payment {
   }
 
   /* 💡 3A. FORZAMOS LA FILA CON FLOAT */
-
-  /* Contenedor padre: Usamos un "clearfix" para contener los floats */
   .card-details-row {
     &::after {
       content: "";
@@ -35,19 +33,18 @@ app-payment {
     }
   }
 
-  /* 💡 3B. FORZAMOS EL ANCHO (DISMINUIR EL LARGO) Y LA FLOTACIÓN */
-
+  /* 💡 3B. FORZAMOS EL ANCHO... */
   .expiry-field {
     float: left !important;
-    width: 100% !important; /* Ancho del 60% */
-    box-sizing: border-box; /* Para que el padding no afecte */
-    padding-right: 10px !important; /* Espacio entre ellos */
+    width: 100% !important;
+    box-sizing: border-box;
+    padding-right: 10px !important;
   }
 
   .cvc-field {
     float: left !important;
-    width: 69% !important; /* Ancho del 40% */
+    width: 69% !important;
     box-sizing: border-box;
-    padding-left: 10px !important; /* Espacio entre ellos */
+    padding-left: 10px !important;
   }
 }
