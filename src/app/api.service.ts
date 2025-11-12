@@ -1,5 +1,8 @@
+// src/app/api.service.ts
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+// 1. Importamos HttpParams junto a HttpClient
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthService } from './auth.service'; // Importamos tu AuthService
@@ -9,12 +12,8 @@ import { AuthService } from './auth.service'; // Importamos tu AuthService
 })
 export class ApiService {
 
-  // --- ¡AQUÍ ESTÁ LA MAGIA! ---
-  // Esta es la IP que obtuviste en el "Paso 1A" del PC del backend.
-  // Reemplaza '192.168.1.10' con la IP de tu PC 2.
-  // CAMBIO: Actualizado al puerto 5000 de tu .env
-  private baseUrl = 'http://192.168.4.217:/api';
-  // -----------------------------
+  // Esta es la URL de tu backend
+  private baseUrl = 'http://192.168.4.217:3000/api';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -39,5 +38,28 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/auth/register`, userData);
   }
 
-  // ... Aquí puedes añadir el resto de tus métodos (search, reports, etc.)
+  // 2. --- MÉTODO DE BÚSQUEDA AÑADIDO ---
+  // (Este método se comunica con searchController.js de sophiemjs)
+  searchProducts(productName: string, location: string, stores: string): Observable<any[]> {
+
+    // Construye los parámetros de la URL
+    let params = new HttpParams();
+
+    // Aseguramos que solo se añadan si tienen valor
+    if (productName) {
+      params = params.append('productName', productName);
+    }
+    if (location) {
+      params = params.append('location', location);
+    }
+    if (stores) {
+      params = params.append('stores', stores);
+    }
+
+    // Realiza la llamada GET a la ruta de búsqueda
+    // (Asegúrate que la ruta '/search' exista en tus searchRoutes.js del backend)
+    return this.http.get<any[]>(`${this.baseUrl}/search`, { params });
+  }
+
+  // ... Aquí puedes añadir el resto de tus métodos (reports, etc.)
 }
