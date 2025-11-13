@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+// src/app/home/home.component.ts
+
+import { Component, OnInit } from '@angular/core'; // 1. Importar OnInit
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+// Quitamos RouterLink porque no se usa en este archivo .ts
+import { AuthService, User } from '../auth.service'; // 2. Importar AuthService y User
 
 @Component({
   selector: 'app-home',
@@ -10,7 +13,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit { // 3. Implementar OnInit
 
   // Variables del formulario (Inputs)
   searchQuery: string = '';
@@ -25,19 +28,48 @@ export class HomeComponent {
 
   hasSearched: boolean = false;
   isLoading: boolean = false;
-  searchError: string | null = null;
   results: any[] = [];
 
-  onSearch() {
-    this.searchError = null;
+  // 💡 CAMBIO: Separamos los errores en dos variables
+  productError: string | null = null;
+  measureError: string | null = null;
 
+  // 4. Variable para el saludo personalizado
+  greetingName: string = '';
+
+  constructor(private authService: AuthService) {} // 5. Inyectar AuthService
+
+  // 6. ngOnInit se ejecuta cuando el componente se carga
+  ngOnInit() {
+    // Nos suscribimos a los cambios del usuario (login/logout)
+    this.authService.currentUser$.subscribe(user => {
+      if (user && user.name) {
+        this.greetingName = `, ${user.name}`; // ej: ", Esteban"
+      } else {
+        this.greetingName = ''; // Se limpia si no hay usuario
+      }
+    });
+  }
+
+  onSearch() {
+    // 💡 CAMBIO: Limpiamos ambos errores
+    this.productError = null;
+    this.measureError = null;
+
+    // 💡 CAMBIO: Validamos el producto y usamos productError
     if (!this.searchQuery.trim()) {
-      this.searchError = 'Por favor, escribe el nombre de un producto.';
-      return;
+      this.productError = 'Por favor, escribe el nombre de un producto (Ejm: )' +
+        ')';
+      // No detenemos, para que pueda mostrar ambos errores si faltan los dos
     }
 
+    // 💡 CAMBIO: Validamos la medida y usamos measureError
     if (!this.measure || this.measure === '') {
-      this.searchError = 'Debes seleccionar una unidad de medida.';
+      this.measureError = 'Debes seleccionar una unidad de medida.';
+    }
+
+    // 💡 CAMBIO: Si existe CUALQUIER error, nos detenemos.
+    if (this.productError || this.measureError) {
       return;
     }
 

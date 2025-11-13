@@ -4,7 +4,7 @@
     <div class="main-logo-section">
       <img src="assets/images/logo.png" alt="Syntara Main Logo" class="main-logo">
     </div>
-    <h2 class="search-prompt">¿Qué producto quieres buscar hoy?</h2>
+    <h2 class="search-prompt">¿Qué producto quieres buscar hoy{{ greetingName }}?</h2>
   </div>
 
   <div class="results-section" *ngIf="hasSearched">
@@ -54,6 +54,10 @@
         class="search-input"
         [(ngModel)]="searchQuery"
         (keyup.enter)="onSearch()">
+
+      <div class="search-error-tooltip" *ngIf="productError">
+        {{ productError }}
+      </div>
     </div>
 
     <div class="search-input-wrapper quantity-input">
@@ -68,7 +72,7 @@
 
     <div class="search-input-wrapper measure-select">
       <select class="search-input" [(ngModel)]="measure">
-        <option value="" disabled selected>Medida</option>
+        <option value="" disabled selected>Unidad de medida</option>
         <optgroup label="Conteo">
           <option value="unidades">Unidades</option>
           <option value="pares">Pares</option>
@@ -100,8 +104,8 @@
         </optgroup>
       </select>
 
-      <div class="search-error-tooltip" *ngIf="searchError">
-        {{ searchError }}
+      <div class="search-error-tooltip" *ngIf="measureError">
+        {{ measureError }}
       </div>
     </div>
 

@@ -1,35 +1,59 @@
 // src/app/auth.service.ts
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs'; // Importante para manejar estado
+import { BehaviorSubject } from 'rxjs';
+
+// 1. Definimos la interfaz para saber qué datos tiene el usuario
+export interface User {
+  id?: string;
+  name: string;          // Para el saludo en el Home
+  email: string;
+  isSubscribed: boolean; // Para ocultar el botón de suscripción
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  // CAMBIO: La variable interna debe llamarse _loggedIn (con guion bajo)
-  // o el nombre que uses, y DEBE ser la misma que usas abajo.
-  private _loggedIn = new BehaviorSubject<boolean>(false);
+  // 2. Ahora guardamos el OBJETO de usuario completo o null (si no hay sesión)
+  private _currentUser = new BehaviorSubject<User | null>(null);
 
-  // CAMBIO: Exponemos el observable usando el mismo nombre de la variable interna
-  isLoggedIn$ = this._loggedIn.asObservable();
+  // Observable para que los componentes (Home, App) escuchen los cambios
+  currentUser$ = this._currentUser.asObservable();
 
-  constructor() { }
+  constructor() {
+    // 3. Al cargar la app, revisamos si ya hay un usuario guardado en el navegador
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        this._currentUser.next(JSON.parse(savedUser));
+      } catch (e) {
+        console.error('Error al recuperar sesión:', e);
+        this._currentUser.next(null);
+      }
+    }
+  }
 
-  // CAMBIO: Este es el método que usa el AuthGuard.
-  // Dentro, debe usar la variable interna _loggedIn.
+  // Método auxiliar para obtener el valor actual sin suscribirse
+  getCurrentUser(): User | null {
+    return this._currentUser.getValue();
+  }
+
+  // Modificado: Retorna true si existe un usuario, false si es null
   isLoggedIn(): boolean {
-    return this._loggedIn.getValue(); // CORREGIDO: Usamos _loggedIn
+    return !!this._currentUser.getValue();
   }
 
-  // Método para iniciar sesión
-  login() {
-    this._loggedIn.next(true); // CORREGIDO: Usamos _loggedIn
+  // 4. Login ahora RECIBE los datos del usuario
+  login(userData: User) {
+    this._currentUser.next(userData); // Actualiza el estado en memoria
+    localStorage.setItem('user', JSON.stringify(userData)); // Guarda en el navegador
   }
 
-  // Método para cerrar sesión
+  // 5. Logout limpia todo
   logout() {
-    this._loggedIn.next(false); // CORREGIDO: Usamos _loggedIn
+    this._currentUser.next(null);
+    localStorage.removeItem('user');
   }
 }

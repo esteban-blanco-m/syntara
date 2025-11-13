@@ -9,9 +9,33 @@
   </div>
 
   <nav class="navigation">
-    <a *ngIf="showHeaderLinks" routerLink="/subscription" class="nav-link">Suscríbete</a>
-    <a *ngIf="showHeaderLinks" routerLink="/login" class="nav-link">Iniciar Sesión</a>
+
+    <a *ngIf="showHeaderLinks && (!currentUser || (currentUser && !currentUser.isSubscribed))"
+       routerLink="/subscription"
+       class="nav-link">
+      Suscríbete
+    </a>
+
+    <a *ngIf="showHeaderLinks && !currentUser"
+       routerLink="/login"
+       class="nav-link">
+      Iniciar Sesión
+    </a>
+
+    <div *ngIf="showHeaderLinks && currentUser" class="user-actions" style="display:flex; gap:10px; align-items:center;">
+      <button (click)="logout()" class="nav-link" style="cursor:pointer; border: 1px solid rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.25);">
+        Salir
+      </button>
+    </div>
+
   </nav>
 </header>
 
 <router-outlet></router-outlet>
+
+<div *ngIf="isLoading" class="logout-overlay">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+    <p>Cerrando sesión...</p>
+  </div>
+</div>

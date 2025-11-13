@@ -1,8 +1,11 @@
+// src/app/app.component.ts
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// 1. IMPORTA TODO LO NECESARIO
+// Importamos todo lo necesario para el enrutamiento
 import { NavigationEnd, Router, RouterLink, RouterOutlet, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { filter } from 'rxjs/operators'; // 2. IMPORTA 'filter'
+import { filter } from 'rxjs/operators';
+import { AuthService, User } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,29 +16,54 @@ import { filter } from 'rxjs/operators'; // 2. IMPORTA 'filter'
 })
 export class AppComponent {
   title = 'syntara';
-  // 3. El valor por defecto es 'true'
   showHeaderLinks: boolean = true;
 
-  // 4. Inyecta ActivatedRoute
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  // Variable para guardar el usuario actual
+  currentUser: User | null = null;
 
-    // 5. Esta es la lógica MÁS ROBUSTA que sí funciona
+  // 💡 NUEVO: Variable para controlar la pantalla de carga al salir
+  isLoading: boolean = false;
+
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService
+  ) {
+
+    // Nos suscribimos a los cambios del usuario
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    // Lógica existente para ocultar botones en Login/Register
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      // Usamos la función 'getDeepestRouteSnapshot'
       const deepest = this.getDeepestRouteSnapshot(this.activatedRoute.snapshot);
-
-      // Revisa si 'hideHeaderLinks' es true en el 'data' de la ruta más profunda
       const hide = deepest?.data['hideHeaderLinks'] === true;
-
-      // Actualiza la variable
       this.showHeaderLinks = !hide;
     });
   }
 
-  // 6. Esta función 'helper' es la clave.
-  // Busca el 'data' en el último componente de la cadena de rutas.
+  // 💡 MÉTODO LOGOUT MODIFICADO
+  logout() {
+    // 1. Activamos la pantalla de carga
+    this.isLoading = true;
+
+    // 2. Esperamos 1.5 segundos (1500 ms)
+    setTimeout(() => {
+      // 3. Ejecutamos el cierre de sesión real
+      this.authService.logout();
+
+      // 4. Redirigimos al home
+      this.router.navigate(['/']);
+
+      // 5. Desactivamos la pantalla de carga
+      this.isLoading = false;
+    }, 1500);
+  }
+
+  // Función helper existente
   private getDeepestRouteSnapshot(snapshot: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
     let current = snapshot;
     while (current.firstChild) {
