@@ -1,14 +1,15 @@
-// src/app/auth.service.ts
-
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
-// 1. Definimos la interfaz para saber qué datos tiene el usuario
+// 1. Definimos la interfaz de Usuario (basada en tu backend [cite: sophiemjs/syntara-backend/syntara-backend-39d44dd518b020c3c8c8fd36cdbf592833945fe8/backend/src/services/authService.js])
 export interface User {
-  id?: string;
-  name: string;          // Para el saludo en el Home
+  id: string;
+  name: string;
+  lastname: string;
   email: string;
-  isSubscribed: boolean; // Para ocultar el botón de suscripción
+  role: string;
+  isSubscribed?: boolean; // Este campo lo manejaremos localmente
 }
 
 @Injectable({
@@ -16,44 +17,54 @@ export interface User {
 })
 export class AuthService {
 
-  // 2. Ahora guardamos el OBJETO de usuario completo o null (si no hay sesión)
-  private _currentUser = new BehaviorSubject<User | null>(null);
+  // Claves para guardar en localStorage
+  private tokenKey = 'authToken';
+  private userKey = 'user';
 
-  // Observable para que los componentes (Home, App) escuchen los cambios
+  // 2. BehaviorSubject para el estado del usuario
+  private _currentUser = new BehaviorSubject<User | null>(null);
   currentUser$ = this._currentUser.asObservable();
 
-  constructor() {
-    // 3. Al cargar la app, revisamos si ya hay un usuario guardado en el navegador
-    const savedUser = localStorage.getItem('user');
+  constructor(private router: Router) {
+    // 3. Al cargar, intentar recuperar la sesión
+    const savedUser = localStorage.getItem(this.userKey);
     if (savedUser) {
       try {
         this._currentUser.next(JSON.parse(savedUser));
       } catch (e) {
-        console.error('Error al recuperar sesión:', e);
-        this._currentUser.next(null);
+        console.error('Error al recuperar sesión, limpiando...', e);
+        this.logout(); // Limpia si los datos están corruptos
       }
     }
   }
 
-  // Método auxiliar para obtener el valor actual sin suscribirse
+  // Método auxiliar para obtener el usuario actual
   getCurrentUser(): User | null {
     return this._currentUser.getValue();
   }
 
-  // Modificado: Retorna true si existe un usuario, false si es null
+  // 4. Método para que el Interceptor lea el token
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  // 5. Método para saber si está autenticado
   isLoggedIn(): boolean {
-    return !!this._currentUser.getValue();
+    return !!this.getToken() && !!this.getCurrentUser();
   }
 
-  // 4. Login ahora RECIBE los datos del usuario
-  login(userData: User) {
-    this._currentUser.next(userData); // Actualiza el estado en memoria
-    localStorage.setItem('user', JSON.stringify(userData)); // Guarda en el navegador
+  // 6. "Login" (guardar estado) - Este es llamado por ApiService
+  login(user: User, token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+    localStorage.setItem(this.userKey, JSON.stringify(user));
+    this._currentUser.next(user);
   }
 
-  // 5. Logout limpia todo
-  logout() {
+  // 7. "Logout" (limpiar estado)
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
     this._currentUser.next(null);
-    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }

@@ -1,10 +1,12 @@
-// src/app/home/home.component.ts
-
-import { Component, OnInit } from '@angular/core'; // 1. Importar OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// Quitamos RouterLink porque no se usa en este archivo .ts
-import { AuthService, User } from '../auth.service'; // 2. Importar AuthService y User
+import { AuthService, User } from '../auth.service';
+// 1. Importar el servicio de búsqueda y las interfaces
+// Se eliminó SearchData de la importación ya que no es necesaria en el componente
+import { SearchService, SearchResult } from '../search.service';
+// 💡 Importamos ApiService para usarlo como el verdadero proveedor de búsqueda
+import { ApiService } from '../api.service'; // Asegúrate de que esta importación exista
 
 @Component({
   selector: 'app-home',
@@ -13,115 +15,118 @@ import { AuthService, User } from '../auth.service'; // 2. Importar AuthService 
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit { // 3. Implementar OnInit
+export class HomeComponent implements OnInit {
 
-  // Variables del formulario (Inputs)
+  // --- Variables del formulario (Inputs) ---
   searchQuery: string = '';
-  quantity: number | null = 1; // Permitir null para limpiar
-  measure: string = '';
+  quantity: number | null = 1;
+  measure: string = ''; // -> se mapea a 'unit'
+  // ELIMINADO: category y stores (variables que ya no se usan)
 
-  // 💡 VARIABLES NUEVAS: Para mostrar en el título de resultados
+  // --- Variables de estado y resultados ---
   // (Conservan el valor de la búsqueda aunque se limpie el input)
   lastSearchQuery: string = '';
   lastSearchQuantity: number = 1;
   lastSearchMeasure: string = '';
+  // ELIMINADO: lastSearchCategory, lastSearchStores
 
   hasSearched: boolean = false;
   isLoading: boolean = false;
-  results: any[] = [];
+  // 3. Tipamos 'results' con la interfaz correcta
+  results: (SearchResult & { measureLabel: string })[] = []; // Añadimos 'measureLabel' a la interfaz
 
-  // 💡 CAMBIO: Separamos los errores en dos variables
+  // --- Variables de Error ---
   productError: string | null = null;
   measureError: string | null = null;
+  // ELIMINADO: categoryError, storesError
+  generalError: string | null = null; // Para errores de API
 
-  // 4. Variable para el saludo personalizado
   greetingName: string = '';
 
-  constructor(private authService: AuthService) {} // 5. Inyectar AuthService
+  // 4. Inyectar SearchService
+  constructor(
+    private authService: AuthService,
+    // 💡 CORRECCIÓN: Inyectamos ApiService, que es donde definimos searchProducts
+    private apiService: ApiService
+  ) {}
 
-  // 6. ngOnInit se ejecuta cuando el componente se carga
   ngOnInit() {
-    // Nos suscribimos a los cambios del usuario (login/logout)
     this.authService.currentUser$.subscribe(user => {
       if (user && user.name) {
-        this.greetingName = `, ${user.name}`; // ej: ", Esteban"
+        // CORREGIDO: Uso correcto de template literal y eliminación de la coma extra
+        this.greetingName = `${user.name}`;
       } else {
-        this.greetingName = ''; // Se limpia si no hay usuario
+        this.greetingName = '';
       }
     });
   }
 
   onSearch() {
-    // 💡 CAMBIO: Limpiamos ambos errores
+    // 5. Limpiar todos los errores al iniciar
     this.productError = null;
     this.measureError = null;
+    this.generalError = null;
+    this.results = [];
 
-    // 💡 CAMBIO: Validamos el producto y usamos productError
+    // --- Validaciones ---
     if (!this.searchQuery.trim()) {
-      this.productError = 'Por favor, escribe el nombre de un producto (Ejm: )' +
-        ')';
-      // No detenemos, para que pueda mostrar ambos errores si faltan los dos
+      this.productError = 'Escribe un producto.';
     }
-
-    // 💡 CAMBIO: Validamos la medida y usamos measureError
     if (!this.measure || this.measure === '') {
-      this.measureError = 'Debes seleccionar una unidad de medida.';
+      this.measureError = 'Selecciona una unidad.';
     }
 
-    // 💡 CAMBIO: Si existe CUALQUIER error, nos detenemos.
+    // Si existe CUALQUIER error, nos detenemos.
     if (this.productError || this.measureError) {
       return;
     }
 
-    // 1. Guardamos lo que se buscó para mostrarlo en el título
+    // --- Preparar llamada ---
+    this.isLoading = true;
+    this.hasSearched = true;
+
+    // 1. Guardamos solo los campos que vamos a usar
     this.lastSearchQuery = this.searchQuery;
     this.lastSearchQuantity = this.quantity || 1;
     this.lastSearchMeasure = this.measure;
 
-    this.hasSearched = true;
-    this.isLoading = true;
-    this.results = [];
+    // 🛑 CORRECCIÓN CLAVE: Llamamos al método searchProducts en el ApiService inyectado.
+    this.apiService.searchProducts(
+      this.lastSearchQuery,
+      this.lastSearchQuantity,
+      this.lastSearchMeasure
+    ).subscribe({
+      // 💡 CORRECCIÓN TS7006: Añadimos el tipado explícito 'response: any'
+      next: (response: any) => {
+        const shortMeasure = this.getMeasureAbbreviation(this.lastSearchMeasure);
 
-    // 2. 💡 LIMPIAMOS EL FORMULARIO INMEDIATAMENTE
-    this.searchQuery = '';
-    this.quantity = 1;
-    this.measure = '';
+        // 4. Mapeamos la respuesta para añadir 'measureLabel' que el HTML espera
+        // Aquí puedes revisar si el backend te devuelve el array en 'response' o en 'response.data'
+        this.results = (response.data || response).map( (result: any) => ({
+          ...result,
+          measureLabel: shortMeasure
+        }));
 
-    setTimeout(() => {
-      this.generateMockData();
-      this.isLoading = false;
-    }, 1500);
+        // Ordenamos por precio
+        this.results.sort((a, b) => a.price - b.price);
+
+        // 5. Limpiamos solo los campos principales del formulario
+        this.searchQuery = '';
+        this.quantity = 1;
+        this.measure = '';
+
+        this.isLoading = false;
+      },
+      // 💡 CORRECCIÓN TS7006: Añadimos el tipado explícito 'err: any'
+      error: (err: any) => {
+        console.error('Error en la búsqueda:', err);
+        this.generalError = 'Error al conectar con el backend. (¿Interceptor y token OK?)';
+        this.isLoading = false;
+      }
+    });
   }
 
-  generateMockData() {
-    const tiendas = ['Éxito', 'Olímpica', 'Ara', 'D1', 'Jumbo', 'Carulla'];
-    const basePrice = Math.floor(Math.random() * 10000) + 2000;
-
-    // Usamos la medida GUARDADA (lastSearchMeasure)
-    const shortMeasure = this.getMeasureAbbreviation(this.lastSearchMeasure);
-
-    this.results = tiendas
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 4)
-      .map(tienda => {
-        const randomVariation = (Math.random() * 2000) - 1000;
-        const finalPrice = Math.abs(Math.floor(basePrice + randomVariation));
-
-        return {
-          store: tienda,
-          price: finalPrice,
-          // Usamos la cantidad GUARDADA (lastSearchQuantity)
-          unitPrice: Math.floor(finalPrice / (this.lastSearchQuantity || 1)),
-          measureLabel: shortMeasure,
-          currency: 'COP',
-          url: 'https://www.google.com',
-          // Usamos el producto GUARDADO
-          product: this.lastSearchQuery
-        };
-      })
-      .sort((a, b) => a.price - b.price);
-  }
-
+  // No se borra: Esta función la necesitamos para mapear la respuesta
   private getMeasureAbbreviation(fullMeasure: string): string {
     const map: { [key: string]: string } = {
       'unidades': 'und', 'pares': 'par', 'docenas': 'doc', 'cajas': 'caja',

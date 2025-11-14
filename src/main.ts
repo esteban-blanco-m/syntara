@@ -1,13 +1,18 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'; // 1. IMPORTA HttpClient
+import { provideHttpClient, withInterceptors } from '@angular/common/http'; // <-- IMPORTA ESTO
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
+import { authInterceptor } from './app/auth.interceptor'; // <-- IMPORTA TU INTERCEPTOR
 
-// 2. Arranca la aplicación
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()) // 3. AÑADE ESTO para que ApiService funcione
+
+    // AÑADE ESTOS PROVIDERS:
+    // Esto configura HttpClient globalmente y le dice que use tu interceptor
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    )
   ]
 }).catch(err => console.error(err));

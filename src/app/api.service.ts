@@ -1,7 +1,7 @@
 // src/app/api.service.ts
 
 import { Injectable } from '@angular/core';
-// 1. Importamos HttpParams junto a HttpClient
+// Importamos HttpParams junto a HttpClient
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -19,52 +19,61 @@ export class ApiService {
 
   // --- Lógica de Login ---
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, credentials).pipe(
+    // 💡 CORRECCIÓN TS2355: Aseguramos el uso de backticks (``) para el template literal
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap((response: any) => {
         // Si el login es exitoso
         console.log('Respuesta del backend:', response);
 
-        // 💡 2. CREAMOS EL OBJETO USUARIO
-        // Aquí mapeamos la respuesta del backend a nuestra estructura 'User'
-        // Ajusta 'response.user?.name' si tu backend lo devuelve en otro campo
-        const userToSave: User = {
-          name: response.user?.name || response.name || 'Usuario',
-          email: response.user?.email || credentials.email,
-          // Si el backend no envía 'isSubscribed', asumimos false por ahora
-          isSubscribed: response.user?.isSubscribed || false
-        };
+        // 💡 2. CORRECCIÓN: Creamos el objeto 'User' completo
+        // Basado en la interfaz de auth.service.ts y la respuesta del backend
+        if (response && response.token && response.user) {
+          const userToSave: User = {
+            id: response.user.id,
+            name: response.user.name,
+            lastname: response.user.lastname,
+            email: response.user.email,
+            role: response.user.role,
+            isSubscribed: response.user.isSubscribed || false // Asumimos false si no viene
+          };
 
-        // 3. Guardamos al usuario en el AuthService
-        this.authService.login(userToSave);
+          // 3. 💡 CORRECCIÓN: Pasamos el 'user' y el 'token' al AuthService
+          this.authService.login(userToSave, response.token);
+        } else {
+          console.error('Respuesta de login inválida:', response);
+        }
       })
     );
   }
 
   // --- Lógica de Registro ---
   register(userData: any): Observable<any> {
+    // 💡 CORRECCIÓN TS2355: Aseguramos el uso de backticks (``) para el template literal
     return this.http.post(`${this.baseUrl}/auth/register`, userData);
   }
 
-  // 2. --- MÉTODO DE BÚSQUEDA AÑADIDO ---
-  // (Este método se comunica con searchController.js de sophiemjs)
-  searchProducts(productName: string, location: string, stores: string): Observable<any[]> {
+  // --- MÉTODO DE BÚSQUEDA CORREGIDO ---
+  // Recibe solo los parámetros que el backend ahora espera (product, quantity, unit)
+  searchProducts(product: string, quantity: number | null, unit: string): Observable<any[]> {
 
     // Construye los parámetros de la URL
     let params = new HttpParams();
 
-    // Aseguramos que solo se añadan si tienen valor
-    if (productName) {
-      params = params.append('productName', productName);
+    // Aseguramos que solo se añadan si tienen valor y que los nombres coincidan con el backend (req.query)
+    if (product) {
+      params = params.append('product', product);
     }
-    if (location) {
-      params = params.append('location', location);
+    // La cantidad (number) debe convertirse a string para HttpParams
+    if (quantity !== null && quantity !== undefined) {
+      params = params.append('quantity', quantity.toString());
     }
-    if (stores) {
-      params = params.append('stores', stores);
+    if (unit) {
+      params = params.append('unit', unit);
     }
 
+    // Eliminamos la lógica de 'location' y 'stores'
+
     // Realiza la llamada GET a la ruta de búsqueda
-    // (Asegúrate que la ruta '/search' exista en tus searchRoutes.js del backend)
     return this.http.get<any[]>(`${this.baseUrl}/search`, { params });
   }
 
