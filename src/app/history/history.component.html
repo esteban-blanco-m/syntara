@@ -1,19 +1,18 @@
 <main class="history-container">
   <h2>Mi Historial de Búsqueda</h2>
 
-  <!-- 1. Indicador de Carga (basado en history.component.ts) -->
+  <!-- Indicador de carga -->
   <div *ngIf="isLoadingHistory" class="loading-indicator">
     <p>Cargando tu historial...</p>
   </div>
 
-  <!-- 2. Mensaje de Error (basado en history.component.ts) -->
+  <!-- Mensaje de error -->
   <div *ngIf="!isLoadingHistory && historyError" class="error-message">
     <p>{{ historyError }}</p>
   </div>
 
   <!--
-    3. TABLA DE HISTORIAL
-       (Se muestra solo si no está cargando, no hay error, y hay historial)
+    TABLA DE HISTORIAL
   -->
   <div class="results-table-container" *ngIf="!isLoadingHistory && !historyError && searchHistory.length > 0">
 
