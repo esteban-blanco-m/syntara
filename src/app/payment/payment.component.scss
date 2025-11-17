@@ -1,31 +1,14 @@
-/* src/app/payment/payment.component.scss */
-
-/* :host le da a estas reglas la máxima prioridad
-   dentro de este componente.
-*/
 :host {
-
-  /* 1. FORZAR LA ALINEACIÓN A LA IZQUIERDA */
   .form-input {
     text-align: left !important;
   }
 
-  /* 2. NUEVO ENFOQUE: USAR CSS GRID PARA LA FILA */
   .card-details-row {
     display: grid !important;
-
-    /* Divide la fila en 2/3 (expiry) y 1/3 (cvc) */
     grid-template-columns: 2fr 1fr !important;
     gap: 20px !important;
   }
-
-  /* Con Grid, los hijos (.expiry-field, .cvc-field)
-     no necesitan 'flex' ni 'width',
-     se acomodan solos en las columnas.
-  */
 }
-
-// --- ESTILOS GENERALES (MANTENER COMO ESTABAN) ---
 
 .payment-container {
   display: flex;
@@ -78,7 +61,6 @@ h2 {
   }
 }
 
-// Estilo de los inputs (la alineación ahora está en :host)
 .form-input {
   height: 55px;
   border: 1px solid #ccc;
@@ -96,11 +78,6 @@ h2 {
     box-shadow: 0 0 8px rgba(84, 167, 139, 0.4);
   }
 }
-
-/* Las reglas de la fila (.card-details-row)
-   y sus hijos (.expiry-field, .cvc-field)
-   están ahora dentro de :host en la parte superior.
-*/
 
 .payment-button {
   width: 100%;
@@ -134,13 +111,14 @@ h2 {
     text-decoration: underline;
   }
 }
+
 .success-overlay {
-  position: fixed; // Cubre toda la pantalla
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); // Fondo oscuro semitransparente
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -160,13 +138,12 @@ h2 {
 
   h3 {
     font-family: 'Cabin', sans-serif;
-    color: #004b3a; // Color de tu marca
+    color: #004b3a;
     font-size: 28px;
     margin-top: 0;
   }
 }
 
-// Animación de aparición
 @keyframes fadeIn {
   from {
     opacity: 0;

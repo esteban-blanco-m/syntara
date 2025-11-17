@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
-// 1. Definimos la interfaz de Usuario (basada en tu backend [cite: sophiemjs/syntara-backend/syntara-backend-39d44dd518b020c3c8c8fd36cdbf592833945fe8/backend/src/services/authService.js])
 export interface User {
   id: string;
   name: string;
@@ -21,12 +20,12 @@ export class AuthService {
   private tokenKey = 'authToken';
   private userKey = 'user';
 
-  // 2. BehaviorSubject para el estado del usuario
+  //BehaviorSubject para el estado del usuario
   private _currentUser = new BehaviorSubject<User | null>(null);
   currentUser$ = this._currentUser.asObservable();
 
   constructor(private router: Router) {
-    // 3. Al cargar, intentar recuperar la sesión
+    // Al cargar, intentar recuperar la sesión
     const savedUser = localStorage.getItem(this.userKey);
     if (savedUser) {
       try {
@@ -38,29 +37,29 @@ export class AuthService {
     }
   }
 
-  // Método auxiliar para obtener el usuario actual
+  // Metodo auxiliar para obtener el usuario actual
   getCurrentUser(): User | null {
     return this._currentUser.getValue();
   }
 
-  // 4. Método para que el Interceptor lea el token
+  // Metodo para que el Interceptor lea el token
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
-  // 5. Método para saber si está autenticado
+  // Metodo para saber si está autenticado
   isLoggedIn(): boolean {
     return !!this.getToken() && !!this.getCurrentUser();
   }
 
-  // 6. "Login" (guardar estado) - Este es llamado por ApiService
+  // "Login" (guardar estado) - Este es llamado por ApiService
   login(user: User, token: string): void {
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(user));
     this._currentUser.next(user);
   }
 
-  // 7. "Logout" (limpiar estado)
+  // "Logout" (limpiar estado)
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);

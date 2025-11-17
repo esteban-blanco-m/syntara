@@ -1,11 +1,8 @@
-/* src/app/app.component.scss */
-
 :host {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100vw;
-  /* 1. TUS NUEVOS ESTILOS DE FONDO APLICADOS */
   background: linear-gradient(to right, #8ccbe0, #aee093 95%);
   box-sizing: border-box;
 }
@@ -18,10 +15,9 @@
   max-width: 100vw;
 }
 
-/* 2. LAYOUT DE 2 COLUMNAS (Izquierda y Derecha) */
 .header {
   display: flex;
-  justify-content: space-between; // Pone .header-left y .navigation en extremos opuestos
+  justify-content: space-between;
   align-items: center;
 
   width: 100%;
@@ -34,15 +30,11 @@
   transition: all 0.3s ease;
 }
 
-/* 3. COLUMNA IZQUIERDA (ahora contiene icono + logo) */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 20px; // Espacio entre el icono de historial y el logo
+  gap: 20px;
 }
-
-/* 4. SE ELIMINÓ .header-center */
-
 .logo-container {
   display: flex;
   align-items: center;
@@ -50,40 +42,33 @@
   gap: 12px;
 }
 .header-logo {
-  /* (Tamaño mantenido de la última corrección) */
   height: 55px;
   width: auto;
   transition: transform 0.3s ease;
 }
 
 .header-title {
-  /* 💡 CAMBIADO: Fuente actualizada a IBM Plex Mono */
   font-family: 'IBM Plex Mono', monospace;
-  /* (Tamaño mantenido de la última corrección) */
   font-size: 28px;
-  font-weight: 700; /* Esto aplica el 'Bold' */
+  font-weight: 700;
   color: #004b3a;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 5. COLUMNA DERECHA (sin cambios) */
 .navigation {
-  flex: 1; // Ocupa 1/3 del espacio
+  flex: 1;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
 }
 
-/* 6. ESTILOS DE BOTONES (fusionados) */
 .nav-link {
   font-family: 'Poppins', sans-serif;
   color: #1a2b3c;
   text-decoration: none;
-  /* 💡 CAMBIADO: Tamaño de fuente aumentado */
   font-size: 18px;
   font-weight: 500;
-  /* 💡 CAMBIADO: Padding aumentado para botones más grandes */
   padding: 12px 22px;
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -94,10 +79,10 @@
   justify-content: center;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.4); // Tu nuevo hover
-    transform: translateY(-1px); // Tu nuevo hover
-    border-color: rgba(0, 75, 58, 0.3); // Hover del contexto
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); // Hover del contexto
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    border-color: rgba(0, 75, 58, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -105,7 +90,6 @@
   cursor: pointer;
 }
 
-/* 7. TUS NUEVOS ESTILOS DE OVERLAY Y SPINNER */
 .logout-overlay {
   position: fixed;
   top: 0;
@@ -144,7 +128,7 @@
   width: 50px;
   height: 50px;
   border: 5px solid #f3f3f3;
-  border-top: 5px solid #54a78b; /* Tu nuevo color de spinner */
+  border-top: 5px solid #54a78b;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -159,16 +143,8 @@
   to { opacity: 1; }
 }
 
-
-/* --- 8. ESTILOS DEL BOTÓN DE ICONO Y TOOLTIP (MANTENIDOS) --- */
-
 .history-icon-button {
   position: relative;
-
-  /* 💡 CAMBIADO: Se eliminan 'background-color', 'color', 'font-weight' y 'border'
-     para que herede los estilos de .nav-link (fondo transparente y borde) */
-
-  /* 💡 CAMBIADO: Tamaño aumentado para coincidir con los otros botones */
   width: 50px;
   height: 50px;
   box-sizing: border-box;
@@ -178,17 +154,13 @@
   align-items: center;
 
   &.nav-link {
-    /* 💡 CAMBIADO: Padding ajustado para el nuevo tamaño */
     padding: 12px;
   }
-
-  /* El hover se hereda de .nav-link, solo ajustamos el shadow si es necesario */
   &:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
   .history-icon-img {
-    /* (El tamaño de la imagen se mantiene) */
     width: 28px;
     height: 28px;
     object-fit: contain;
@@ -213,7 +185,6 @@
     transform: translateX(-50%);
     transition: opacity 0.2s ease, visibility 0.2s ease;
   }
-
   &:hover .tooltip {
     visibility: visible;
     opacity: 1;
