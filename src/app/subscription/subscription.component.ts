@@ -1,12 +1,11 @@
-// src/app/suscription/suscription.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router'; // <--- ¡DEBE ESTAR ESTO!
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-subscription',
   standalone: true,
-  imports: [CommonModule, RouterLink], // <--- ¡DEBE ESTAR EN LOS IMPORTS!
+  imports: [CommonModule, RouterLink],
   templateUrl: './subscription.component.html',
   styleUrls: ['./subscription.component.scss']
 })

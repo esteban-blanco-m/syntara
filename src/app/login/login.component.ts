@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { ApiService } from '../api.service';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ReactiveFormsModule, FormBuilder, Validators, FormGroup} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '../auth.service';
+import {ApiService} from '../api.service';
 
 @Component({
   selector: 'app-login',
@@ -29,14 +29,14 @@ export class LoginComponent {
     });
   }
 
-  toggleLoginPass() { this.loginPasswordVisible = !this.loginPasswordVisible; }
+  toggleLoginPass() {
+    this.loginPasswordVisible = !this.loginPasswordVisible;
+  }
 
   onLoginSubmit() {
     this.loginError = null;
     if (this.loginForm.valid) {
-
       const formValue = this.loginForm.value;
-
       const payload = {
         email: formValue.correo,
         password: formValue.contrasena
@@ -47,16 +47,12 @@ export class LoginComponent {
       this.apiService.login(payload).subscribe({
         next: (response) => {
           console.log('Login exitoso!', response);
-
-          // 💡 CAMBIO: Redirigimos al Home ('/') en lugar de subscription
           this.router.navigate(['/']);
           this.loginForm.reset();
         },
-
         error: (err) => {
           console.error('Error en el login:', err);
           let backendMessage = 'Credenciales incorrectas o el servidor no responde.';
-
           if (err.error && err.error.message) {
             backendMessage = err.error.message;
           } else if (err.error && typeof err.error === 'string') {
@@ -64,11 +60,9 @@ export class LoginComponent {
           } else if (err.statusText) {
             backendMessage = err.statusText;
           }
-
           this.loginError = `Error: ${backendMessage}`;
         }
       });
-
     } else {
       console.log('Formulario de login inválido');
       this.loginError = 'Por favor, introduce un correo y contraseña válidos.';

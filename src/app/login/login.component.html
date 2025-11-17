@@ -1,12 +1,10 @@
 <div class="form-container">
   <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
     <h2>Iniciar Sesión</h2>
-
     <div class="form-field">
       <label for="login-correo">Correo Electrónico</label>
       <input id="login-correo" type="email" formControlName="correo" placeholder="tu@correo.com">
     </div>
-
     <div class="form-field">
       <label for="login-contrasena">Contraseña</label>
       <div class="password-wrapper">
@@ -19,17 +17,11 @@
         </button>
       </div>
     </div>
-
-    <!-- 💡 AQUÍ AÑADIMOS EL MENSAJE DE ERROR -->
     <div *ngIf="loginError" class="error-message">
       {{ loginError }}
     </div>
-    <!-- FIN DE LA MODIFICACIÓN -->
-
     <button type="submit" class="form-button" [disabled]="loginForm.invalid">Entrar</button>
-
     <p class="form-link">
-
     <p class="form-link">
       ¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a>
     </p>

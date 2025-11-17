@@ -5,7 +5,7 @@
   flex-grow: 1;
   padding: 60px 40px 40px;
   font-family: 'Poppins', sans-serif;
-  background: none !important; /* deja ver el fondo general */
+  background: none !important;
 }
 
 .main-logo-section {
@@ -37,7 +37,6 @@
   margin-top: 10px;
 }
 
-/* 🔹 Tarjetas principales (70% translúcidas, sin borde) */
 .plan-card {
   background: rgba(255, 255, 255, 0.7);
   border: 2px solid #54a78b;
@@ -116,7 +115,6 @@
   }
 }
 
-/* 🔸 Plan empresarial — único con borde */
 .plan-card.enterprise {
   border: 2px solid #54a78b;
   box-shadow: 0 10px 35px rgba(84, 167, 139, 0.25);
@@ -138,7 +136,6 @@
   }
 }
 
-/* 🔹 Footer */
 .footer {
   text-align: center;
   padding-top: 50px;
