@@ -7,7 +7,11 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { PaymentComponent } from './payment/payment.component';
-import { authGuard } from './auth.guard';
+import { authGuard } from './auth.guard'; //
+
+// --- 1. IMPORTA EL NUEVO COMPONENTE DE HISTORIAL ---
+import { HistoryComponent } from './history/history.component';
+
 
 export const routes: Routes = [
   // Ruta Home (Pública) - NO LLEVA DATA
@@ -29,14 +33,23 @@ export const routes: Routes = [
   {
     path: 'subscription',
     component: SubscriptionComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard], //
     data: { hideHeaderLinks: true }
   },
   {
     path: 'payment',
     component: PaymentComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard], //
     data: { hideHeaderLinks: true }
+  },
+
+  // --- 2. AÑADE LA NUEVA RUTA DE HISTORIAL ---
+  // Esta ruta está protegida por el authGuard
+  // No ocultamos los links del header aquí
+  {
+    path: 'history',
+    component: HistoryComponent,
+    canActivate: [authGuard] //
   },
 
   // --------------------------

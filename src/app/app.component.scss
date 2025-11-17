@@ -135,3 +135,24 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Espacio entre el logo y el botón "Historial" */
+}
+
+/* 2. Estilo para el nuevo botón de Historial */
+.history-link {
+  /* Usamos la base de .nav-link pero con un estilo más "principal" */
+  background-color: rgba(255, 255, 255, 0.85); /* Fondo más sólido */
+  color: #004b3a; /* Color verde de tu marca */
+  font-weight: 600; /* Más destacado */
+  border: 1px solid rgba(0, 75, 58, 0.3);
+
+  &:hover {
+    background-color: #ffffff;
+    border-color: #004b3a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+}

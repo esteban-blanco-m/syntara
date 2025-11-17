@@ -77,5 +77,14 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/search`, { params });
   }
 
-  // ... Aquí puedes añadir el resto de tus métodos (reports, etc.)
+  // --- 💡 NUEVO MÉTODO DE HISTORIAL AÑADIDO ---
+  /**
+   * Obtiene el historial de búsqueda del usuario autenticado.
+   * El interceptor se encargará de añadir el token.
+   */
+  getSearchHistory(): Observable<any[]> {
+    // Asumimos que tu endpoint de historial es '/api/search/history'
+    // El backend debe devolver un array de objetos HistoryItem.
+    return this.http.get<any[]>(`${this.baseUrl}/search/history`);
+  }
 }

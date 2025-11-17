@@ -1,11 +1,22 @@
 <header class="header">
-  <div class="logo-container">
-    <img
-      src="assets/images/logopequ.png"
-      alt="Syntara Logo"
-      class="header-logo header-home-button"
-      routerLink="/">
-    <span class="header-title" routerLink="/">Syntara</span>
+
+  <div class="header-left">
+
+    <div class="logo-container">
+      <img
+        src="assets/images/logopequ.png"
+        alt="Syntara Logo"
+        class="header-logo header-home-button"
+        routerLink="/">
+      <span class="header-title" routerLink="/">Syntara</span>
+    </div>
+
+    <a *ngIf="currentUser && showHeaderLinks"
+       routerLink="/history"
+       class="nav-link history-link">
+      Historial
+    </a>
+
   </div>
 
   <nav class="navigation">

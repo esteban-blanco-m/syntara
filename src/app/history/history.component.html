@@ -1,0 +1,64 @@
+<main class="history-container">
+  <h2>Mi Historial de Búsqueda</h2>
+
+  <!-- 1. Indicador de Carga (basado en history.component.ts) -->
+  <div *ngIf="isLoadingHistory" class="loading-indicator">
+    <p>Cargando tu historial...</p>
+  </div>
+
+  <!-- 2. Mensaje de Error (basado en history.component.ts) -->
+  <div *ngIf="!isLoadingHistory && historyError" class="error-message">
+    <p>{{ historyError }}</p>
+  </div>
+
+  <!--
+    3. TABLA DE HISTORIAL
+       (Se muestra solo si no está cargando, no hay error, y hay historial)
+  -->
+  <div class="results-table-container" *ngIf="!isLoadingHistory && !historyError && searchHistory.length > 0">
+
+    <table class="results-table">
+      <thead>
+      <tr>
+        <!-- Columnas adaptadas para el historial -->
+        <th>PRODUCTO</th>
+        <th>BÚSQUEDA</th>
+        <th>FECHA</th>
+        <th>ACCIÓN</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Iteramos sobre 'searchHistory' del history.component.ts -->
+      <tr *ngFor="let item of searchHistory">
+
+        <!-- Columna 1: Producto (re-usamos la clase .store-name) -->
+        <td class="store-name">{{ item.product }}</td>
+
+        <!-- Columna 2: Búsqueda (re-usamos la clase .unit-price-col) -->
+        <td class="unit-price-col">
+          <span class="unit-price-label">{{ item.quantity }}</span>
+          <span class="unit-price-value" style="font-size: 16px; margin-left: 8px;">{{ item.unit }}</span>
+        </td>
+
+        <!-- Columna 3: Fecha (usamos el DatePipe) -->
+        <td>{{ item.date | date:'mediumDate' }}</td> <!-- Ej: 15 nov 2025 -->
+
+        <!-- Columna 4: Acción (con el (click) de history.component.ts) -->
+        <td>
+          <button (click)="onSearchAgain(item)" class="history-search-btn">
+            Volver a buscar
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. Mensaje si no hay historial (basado en history.component.ts) -->
+  <div *ngIf="!isLoadingHistory && !historyError && searchHistory.length === 0" class="no-results">
+    <p>Aún no tienes búsquedas en tu historial.</p>
+  </div>
+
+  <!-- 5. Enlace para volver al inicio -->
+  <a routerLink="/" class="back-link">Volver al Inicio</a>
+</main>
