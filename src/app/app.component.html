@@ -1,13 +1,33 @@
 <header class="header">
-  <div class="logo-container">
-    <img
-      src="assets/images/logopequ.png"
-      alt="Syntara Logo"
-      class="header-logo header-home-button"
-      routerLink="/">
-    <span class="header-title" routerLink="/">Syntara</span>
+
+  <!-- 1. SECCIÓN IZQUIERDA: Contendrá el icono Y el logo -->
+  <div class="header-left">
+
+    <!-- Botón de icono con tooltip -->
+    <a *ngIf="currentUser && showHeaderLinks"
+       routerLink="/history"
+       class="nav-link history-icon-button"
+       aria-label="Ver historial">
+
+      <!-- Usando tu imagen de assets -->
+      <img src="assets/images/historial.png" alt="Historial" class="history-icon-img">
+
+      <!-- Tooltip (mensaje flotante) -->
+      <span class="tooltip">Ver historial</span>
+    </a>
+
+    <!-- 2. Logo (movido aquí, dentro de .header-left) -->
+    <div class="logo-container">
+      <img
+        src="assets/images/logopequ.png"
+        alt="Syntara Logo"
+        class="header-logo header-home-button"
+        routerLink="/">
+      <span class="header-title" routerLink="/">Syntara</span>
+    </div>
   </div>
 
+  <!-- 3. SECCIÓN DERECHA: Navegación (ya no hay .header-center) -->
   <nav class="navigation">
 
     <a *ngIf="showHeaderLinks && (!currentUser || (currentUser && !currentUser.isSubscribed))"
@@ -33,6 +53,7 @@
 
 <router-outlet></router-outlet>
 
+<!-- Tu overlay de logout se queda igual -->
 <div *ngIf="isLoading" class="logout-overlay">
   <div class="spinner-container">
     <div class="spinner"></div>

@@ -5,14 +5,21 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  /* 💡 CAMBIADO: Centra verticalmente el contenido inicial */
+  justify-content: center;
   align-items: center;
   width: 100%;
-  padding-top: 50px;
+  /* 💡 CAMBIADO: Padding superior para dejar espacio al header fijo */
+  padding-top: 80px;
+  /* 💡 CAMBIADO: Padding inferior para dejar espacio al footer fijo */
+  padding-bottom: 80px;
   min-height: calc(100vh - 80px);
   transition: all 0.5s ease;
+  /* 💡 AÑADIDO: Para que el padding no desborde el vh */
+  box-sizing: border-box;
 
   &.active-view {
+    /* (Se mantiene como estaba) */
     justify-content: flex-start;
     padding-top: 20px;
     padding-bottom: 140px;
@@ -333,12 +340,24 @@
 
 /* --- FOOTER --- */
 .footer {
+  /* 💡 CAMBIADO: Posición fija en la parte inferior */
+  position: fixed;
+  bottom: 30px; // A 30px del borde
+  left: 0;
+  right: 0;
   text-align: center;
-  padding-top: 120px;
+  padding-top: 0; // Se quita el padding-top
   color: #004b3a;
   font-size: 18px;
   font-family: 'Poppins', sans-serif;
+  z-index: 50; // Debajo de la barra de búsqueda
 }
+
+/* 💡 AÑADIDO: Oculta el footer cuando se muestran los resultados */
+.main-content.active-view .footer {
+  display: none;
+}
+
 
 /* --- UTILIDADES --- */
 .hide-spin-buttons {

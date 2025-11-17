@@ -1,0 +1,163 @@
+/* src/app/history/history.component.scss */
+
+/* 1. Estilos base de la página */
+.history-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 30px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+
+  h2 {
+    font-family: 'Cabin', sans-serif;
+    color: #004b3a;
+    font-size: 32px;
+    margin-bottom: 25px;
+  }
+}
+
+/* 2. Estilos copiados de home.component.scss para consistencia */
+
+.loading-indicator {
+  text-align: center;
+  font-size: 22px;
+  color: #004b3a; /* Ajustado de 'white' a 'verde' para ser visible */
+  font-family: 'Poppins', sans-serif;
+  margin-top: 50px;
+}
+
+/* Mensaje de error genérico (nuevo) */
+.error-message {
+  text-align: center;
+  font-size: 18px;
+  color: #D32F2F; /* Color de error */
+  font-family: 'Poppins', sans-serif;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: rgba(255, 221, 221, 0.9);
+  border-radius: 15px;
+}
+
+.results-table-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Poppins', sans-serif;
+
+  thead {
+    background-color: #e0e0e0;
+
+    th {
+      padding: 25px 30px;
+      text-align: left;
+      font-weight: 700;
+      color: #444;
+      text-transform: uppercase;
+      font-size: 18px;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+
+      &:last-child { border-bottom: none; }
+
+      &:hover {
+        background-color: #f3f4f6;
+      }
+    }
+
+    td {
+      padding: 28px 30px;
+      font-size: 20px;
+      color: #333;
+      text-align: left; /* Aseguramos alineación */
+    }
+  }
+}
+
+/* Re-utilizamos esta clase para la columna de búsqueda (Cantidad + Unidad) */
+.unit-price-col {
+  white-space: nowrap;
+
+  .unit-price-value {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .unit-price-label {
+    font-size: 22px;
+    font-weight: 700;
+    color: #004b3a;
+  }
+}
+
+/* Re-utilizamos esta clase para el nombre del producto */
+.store-name {
+  font-weight: 600;
+}
+
+/* Mensaje si no hay historial (nuevo) */
+.no-results {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  padding: 40px 20px;
+}
+
+
+/* 3. Estilos para los botones específicos de esta página */
+
+/* Botón "Volver a buscar" dentro de la tabla */
+.history-search-btn {
+  background: none;
+  border: 2px solid #54a78b;
+  color: #004b3a;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+
+  &:hover {
+    background-color: #54a78b;
+    color: white;
+  }
+}
+
+/* Botón "Volver al Inicio" (copiado de .search-button de home) */
+.back-link {
+  display: inline-block;
+  background-color: #54a78b;
+  color: white;
+  border: none;
+  border-radius: 60px;
+  padding: 14px 40px; /* Un poco más pequeño que el de home */
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-top: 30px;
+
+  &:hover {
+    background-color: #4a9479;
+    transform: translateY(-1px);
+  }
+}
