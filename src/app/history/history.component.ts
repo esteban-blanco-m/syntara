@@ -75,4 +75,25 @@ export class HistoryComponent implements OnInit {
       }
     });
   }
+
+  onClearHistory() {
+    if (!confirm('¿Estás seguro de que quieres borrar TODO tu historial? Esta acción no se puede deshacer.')) {
+      return;
+    }
+    this.isLoadingHistory = true; // Reusamos el loading spinner
+    this.historyError = null;
+
+    this.apiService.clearSearchHistory().subscribe({
+      next: () => {
+        console.log('Historial borrado exitosamente');
+        this.searchHistory = []; // Vaciar la lista local
+        this.isLoadingHistory = false;
+      },
+      error: (err) => {
+        console.error('Error al borrar el historial:', err);
+        this.historyError = 'No se pudo borrar tu historial. Intenta de nuevo.';
+        this.isLoadingHistory = false;
+      }
+    });
+  }
 }

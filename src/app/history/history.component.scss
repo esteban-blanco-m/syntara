@@ -149,3 +149,27 @@
     transform: translateY(-1px);
   }
 }
+
+.clear-history-btn {
+  display: inline-block;
+  background-color: #D32F2F;
+  color: white;
+  border: none;
+  border-radius: 60px;
+  padding: 14px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-bottom: 30px;
+
+  &:hover {
+    background-color: #b71c1c;
+  }
+
+  &:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+}

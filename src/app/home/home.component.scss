@@ -284,6 +284,11 @@
         td {
           color: #166534;
           font-weight: 600;
+
+          .price-col.offer-price {
+            color: #D32F2F; // Color rojo para ofertas
+            font-weight: 700; // Más grueso para destacar
+          }
         }
 
         .store-link {

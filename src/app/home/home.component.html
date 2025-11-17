@@ -3,7 +3,8 @@
     <div class="main-logo-section">
       <img src="assets/images/logo.png" alt="Syntara Main Logo" class="main-logo">
     </div>
-    <h2 class="search-prompt">¿Qué producto quieres buscar hoy<span *ngIf="greetingName"> {{ greetingName }}</span>?</h2>
+    <h2 class="search-prompt">¿Qué producto quieres buscar hoy<span *ngIf="greetingName"> {{ greetingName }}</span>?
+    </h2>
   </div>
   <div class="results-section" *ngIf="hasSearched">
     <h2 class="results-title">
@@ -24,20 +25,25 @@
           <th>PRECIO</th>
           <th>PRECIO POR UND</th>
           <th>URL</th>
+          <th>FECHA</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let item of results; let first = first" [class.highlight-row]="first">
           <td class="store-name">{{ item.store }}</td>
-          <td class="price-col">$ {{ item.price | number:'1.0-0' }}</td>
+          <td
+            class="price-col"
+            [class.offer-price]="item.isOffer">
+            $ {{ item.price | number:'1.0-0' }}
+          </td>
           <td class="unit-price-col">
-            <!-- NOTA: Tu API debe devolver 'unitPrice'. Si no, esto mostrará '$ 0' -->
             <span class="unit-price-value">$ {{ item.unitPrice | number:'1.0-0' }}</span>
             <span class="unit-price-label">/ {{ item.measureLabel }}</span>
           </td>
           <td>
             <a [href]="item.url" target="_blank" class="store-link">Ir a la tienda</a>
           </td>
+          <td>{{ item.date | date:'short' }}</td>
         </tr>
         </tbody>
       </table>

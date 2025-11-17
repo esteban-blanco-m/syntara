@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {SearchResult} from '../search.service';
@@ -8,18 +8,18 @@ import {ApiService} from '../api.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
-  // --- Variables del formulario ---
+  // Variables del formulario
   searchQuery: string = '';
   quantity: number | null = 1;
   measure: string = ''; // -> se mapea a 'unit'
 
-  // --- Variables de estado y resultados ---
+  // Variables de estado y resultados
   lastSearchQuery: string = '';
   lastSearchQuantity: number = 1;
   lastSearchMeasure: string = '';
@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   isLoading: boolean = false;
   results: (SearchResult & { measureLabel: string })[] = [];
 
-  // --- Variables de Error ---
+  // Variables de error
   productError: string | null = null;
   measureError: string | null = null;
   generalError: string | null = null; // Para errores de API
@@ -84,6 +84,7 @@ export class HomeComponent implements OnInit {
           ...result,
           measureLabel: shortMeasure
         }));
+
         // Ordenamos por precio
         this.results.sort((a, b) => a.price - b.price);
         // Limpiamos solo los campos principales del formulario

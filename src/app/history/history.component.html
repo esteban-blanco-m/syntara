@@ -1,23 +1,24 @@
 <main class="history-container">
   <h2>Mi Historial de Búsqueda</h2>
-
-  <!-- Indicador de carga -->
+  <button
+    *ngIf="!isLoadingHistory && !historyError && searchHistory.length > 0"
+    (click)="onClearHistory()"
+    class="clear-history-btn">
+    Borrar todo el historial
+  </button>
+  <div class="results-table-container" *ngIf="!isLoadingHistory && !historyError && searchHistory.length > 0">
+  </div>
   <div *ngIf="isLoadingHistory" class="loading-indicator">
     <p>Cargando tu historial...</p>
   </div>
-
-  <!-- Mensaje de error -->
   <div *ngIf="!isLoadingHistory && historyError" class="error-message">
     <p>{{ historyError }}</p>
   </div>
-
-  <!-- TABLA DE HISTORIAL -->
   <div class="results-table-container" *ngIf="!isLoadingHistory && !historyError && searchHistory.length > 0">
 
     <table class="results-table">
       <thead>
       <tr>
-        <!-- Columnas adaptadas para el historial -->
         <th>PRODUCTO</th>
         <th>BÚSQUEDA</th>
         <th>FECHA</th>

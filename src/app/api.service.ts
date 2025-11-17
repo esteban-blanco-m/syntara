@@ -58,4 +58,9 @@ export class ApiService {
   getSearchHistory(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/search/history`);
   }
+  clearSearchHistory(): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/search/history`);
+  }
+
+
 }
