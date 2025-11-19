@@ -50,6 +50,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // src/app/home/home.component.ts
+
+// ... (resto del código del componente)
+
   onSearch() {
     // Limpiar todos los errores al iniciar
     this.productError = null;
@@ -79,11 +83,22 @@ export class HomeComponent implements OnInit {
       this.lastSearchMeasure
     ).subscribe({
       next: (response: any) => {
+        // --- INICIO DE LA CORRECCIÓN CRÍTICA ---
+        // 1. Determinar el payload: response.data o la respuesta completa (response).
+        const payload = response.data || response;
+
+        // 2. Extraer el array de resultados, usando un array vacío como fallback.
+        // Esto previene el error .map() en objetos nulos o indefinidos.
+        const resultsArray = payload.results || [];
+
         const shortMeasure = this.getMeasureAbbreviation(this.lastSearchMeasure);
-        this.results = (response.data || response).map((result: any) => ({
+
+        // 3. Mapear sobre el array de resultados (resultsArray), que ahora está garantizado como un array.
+        this.results = resultsArray.map((result: any) => ({
           ...result,
           measureLabel: shortMeasure
         }));
+        // --- FIN DE LA CORRECCIÓN CRÍTICA ---
 
         // Ordenamos por precio
         this.results.sort((a, b) => a.price - b.price);
@@ -101,6 +116,8 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+// ... (el resto del componente)
 
   private getMeasureAbbreviation(fullMeasure: string): string {
     const map: { [key: string]: string } = {

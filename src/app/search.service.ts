@@ -6,6 +6,7 @@ export interface SearchData {
   product: string;
   quantity: number;
   unit: string;
+  clientDate: string;
 }
 
 export interface SearchResult {
@@ -31,8 +32,8 @@ export class SearchService {
   constructor(private http: HttpClient) {
   }
 
-   //Llama al endpoint POST /api/search del backend
-   // El interceptor se encargará de añadir el token.
+  //Llama al endpoint POST /api/search del backend
+  // El interceptor se encargará de añadir el token.
   search(data: SearchData): Observable<{ results: SearchResult[] }> {
     return this.http.post<{ results: SearchResult[] }>(this.apiUrl, data);
   }
