@@ -3,7 +3,6 @@ import {CommonModule, DatePipe} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {ApiService} from '../api.service';
 
-// Interfaz para el historial
 export interface HistoryItem {
   id: string;
   product: string;
@@ -21,12 +20,16 @@ export interface HistoryItem {
 })
 export class HistoryComponent implements OnInit {
 
-  // Variables de estado
   searchHistory: HistoryItem[] = [];
   isLoadingHistory: boolean = false;
   historyError: string | null = null;
 
-  // Inyectar ApiService y Router
+  // Variables para el Modal de confirmación
+  showConfirmModal: boolean = false;
+  isClearing: boolean = false; // Spinner dentro del modal
+  itemToDelete: HistoryItem | null = null; // Para saber qué estamos borrando (null = borrar todo)
+  modalMessage: string = ''; // Mensaje dinámico del modal
+
   constructor(
     private apiService: ApiService,
     private router: Router
@@ -34,38 +37,29 @@ export class HistoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Llamada a cargar el histotial
     this.fetchHistory();
   }
 
   fetchHistory() {
     this.isLoadingHistory = true;
     this.historyError = null;
-    this.searchHistory = [];
-
-    // Llamada al nuevo metodo del ApiService
     this.apiService.getSearchHistory().subscribe({
-
-      // Manejo de éxito
       next: (response: any) => {
         this.searchHistory = (response.data || response) as HistoryItem[];
+        // Ordenar por fecha descendente
         this.searchHistory.sort((a, b) =>
           new Date(b.date).getTime() - new Date(a.date).getTime()
         );
-
         this.isLoadingHistory = false;
       },
-
-      // Manejo de error
       error: (err: any) => {
         console.error('Error al cargar el historial:', err);
-        this.historyError = 'No se pudo cargar tu historial. Intenta de nuevo más tarde.';
+        this.historyError = 'No se pudo cargar tu historial.';
         this.isLoadingHistory = false;
       }
     });
   }
 
-  //Navega de nuevo a la busqueda
   onSearchAgain(item: HistoryItem) {
     this.router.navigate(['/'], {
       queryParams: {
@@ -76,24 +70,73 @@ export class HistoryComponent implements OnInit {
     });
   }
 
-  onClearHistory() {
-    if (!confirm('¿Estás seguro de que quieres borrar TODO tu historial? Esta acción no se puede deshacer.')) {
-      return;
-    }
-    this.isLoadingHistory = true; // Reusamos el loading spinner
-    this.historyError = null;
+  //Abrir modal para borrar TODO
+  requestClearAll() {
+    this.itemToDelete = null; // null indica borrar todo
+    this.modalMessage = '¿Estás seguro de que quieres borrar TODO tu historial?';
+    this.showConfirmModal = true;
+  }
 
+  //Abrir modal para borrar UN ITEM
+  requestDeleteItem(item: HistoryItem) {
+    this.itemToDelete = item;
+    this.modalMessage = '¿Eliminar este registro del historial?';
+    this.showConfirmModal = true;
+  }
+
+  //Cancelar
+  cancelClear() {
+    this.showConfirmModal = false;
+    this.itemToDelete = null;
+  }
+
+  // Confirmar acción
+  confirmClear() {
+    this.isClearing = true;
+
+    setTimeout(() => {
+      if (this.itemToDelete) {
+        // Borrar solo uno
+        this.deleteSingleItem(this.itemToDelete);
+      } else {
+        // Borrar todo
+        this.deleteAllHistory();
+      }
+    }, 800);
+  }
+
+  private deleteAllHistory() {
     this.apiService.clearSearchHistory().subscribe({
       next: () => {
-        console.log('Historial borrado exitosamente');
-        this.searchHistory = []; // Vaciar la lista local
-        this.isLoadingHistory = false;
+        this.searchHistory = [];
+        this.finalizeAction();
       },
       error: (err) => {
-        console.error('Error al borrar el historial:', err);
-        this.historyError = 'No se pudo borrar tu historial. Intenta de nuevo.';
-        this.isLoadingHistory = false;
+        console.error('Error al borrar historial:', err);
+        this.historyError = 'No se pudo borrar el historial.';
+        this.finalizeAction();
       }
     });
+  }
+
+  private deleteSingleItem(item: HistoryItem) {
+    this.apiService.deleteHistoryItem(item.id).subscribe({
+      next: () => {
+        // Filtrar localmente para no recargar toda la lista
+        this.searchHistory = this.searchHistory.filter(h => h.id !== item.id);
+        this.finalizeAction();
+      },
+      error: (err) => {
+        console.error('Error al borrar item:', err);
+        // Opcional: mostrar error en UI
+        this.finalizeAction();
+      }
+    });
+  }
+
+  private finalizeAction() {
+    this.isClearing = false;
+    this.showConfirmModal = false;
+    this.itemToDelete = null;
   }
 }
