@@ -9,6 +9,7 @@ export interface HistoryItem {
   quantity: number;
   unit: string;
   date: Date;
+  url: string;
 }
 
 @Component({
