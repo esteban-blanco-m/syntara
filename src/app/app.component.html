@@ -34,7 +34,11 @@
     </div>
   </nav>
 </header>
-<router-outlet></router-outlet>
+
+<div [@routeAnimations]="getRouteAnimationData()">
+  <router-outlet></router-outlet>
+</div>
+
 <div *ngIf="isLoading" class="logout-overlay">
   <div class="spinner-container">
     <div class="spinner"></div>

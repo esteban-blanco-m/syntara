@@ -1,4 +1,5 @@
 <main class="main-content" [class.active-view]="hasSearched">
+
   <div class="intro-section" *ngIf="!hasSearched">
     <div class="main-logo-section">
       <img src="assets/images/logo.png" alt="Syntara Main Logo" class="main-logo">
@@ -6,17 +7,26 @@
     <h2 class="search-prompt">¿Qué producto quieres buscar hoy<span *ngIf="greetingName"> {{ greetingName }}</span>?
     </h2>
   </div>
+
   <div class="results-section" *ngIf="hasSearched">
+
     <h2 class="results-title">
       Resultados de búsqueda <br>
-      <span>Producto buscado: {{ lastSearchQuery }} - {{ lastSearchQuantity }} {{ lastSearchMeasure }}</span>
+      <span
+        [appTypewriter]="resultsTitleText"
+        [typingSpeed]="40"
+        style="min-height: 30px; display: block; font-weight: 400; font-size: 22px; margin-top: 8px;">
+      </span>
     </h2>
+
     <div *ngIf="isLoading" class="loading-indicator">
       <p>Buscando los mejores precios...</p>
     </div>
+
     <div *ngIf="generalError && !isLoading" class="error-message">
       <p>{{ generalError }}</p>
     </div>
+
     <div class="results-table-container" *ngIf="!isLoading && results.length > 0">
       <table class="results-table">
         <thead>
@@ -28,7 +38,8 @@
           <th>FECHA</th>
         </tr>
         </thead>
-        <tbody>
+
+        <tbody [@listAnimation]="results.length">
         <tr *ngFor="let item of results; let first = first" [class.highlight-row]="first">
           <td class="store-name">{{ item.store }}</td>
           <td
@@ -48,6 +59,7 @@
         </tbody>
       </table>
     </div>
+
     <div class="no-results-container" *ngIf="!isLoading && results.length === 0 && !generalError">
       <div class="icon-wrapper">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="no-results-icon">
@@ -71,6 +83,7 @@
       </div>
     </div>
   </div>
+
   <div class="search-section" [class.search-active]="hasSearched">
     <div class="search-input-wrapper product-input">
       <input
@@ -134,6 +147,7 @@
       <img *ngIf="hasSearched" src="assets/images/logopequ.png" alt="Buscar" class="search-button-icon">
     </button>
   </div>
+
   <footer class="footer" *ngIf="!hasSearched">
     <p>Syntara • Los precios hablan, Syntara escucha. ©</p>
   </footer>

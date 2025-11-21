@@ -78,6 +78,7 @@
       font-size: 18px;
       color: #333;
       text-align: left;
+      vertical-align: middle;
     }
   }
 }
@@ -93,6 +94,32 @@
 
   .unit-price-value {
     font-weight: 600;
+  }
+}
+
+.url-cell {
+  .history-link {
+    color: #004b3a;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(84, 167, 139, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    font-size: 15px;
+
+    &:hover {
+      background-color: rgba(84, 167, 139, 0.25);
+      color: #00382a;
+      transform: translateY(-1px);
+    }
+  }
+
+  .no-link {
+    color: #999;
+    font-style: italic;
   }
 }
 
@@ -180,6 +207,7 @@
   }
 }
 
+/* --- MODAL STYLES --- */
 .modal-overlay {
   position: fixed;
   top: 0;

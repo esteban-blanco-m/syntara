@@ -2,15 +2,30 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../auth.service';
-import {SearchResult} from '../search.service';
+import {SearchResult, SearchService} from '../search.service';
 import {ApiService} from '../api.service';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { TypewriterDirective } from '../typewriter.directive';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, TypewriterDirective],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  animations: [
+    trigger('listAnimation', [
+      transition('* => *', [ // Cada vez que cambie la lista
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(30px)' }),
+          stagger(100, [ // Retraso de 100ms entre cada elemento
+            animate('500ms cubic-bezier(0.35, 0, 0.25, 1)',
+              style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ]
 })
 export class HomeComponent implements OnInit {
 
@@ -33,6 +48,9 @@ export class HomeComponent implements OnInit {
   generalError: string | null = null; // Para errores de API
   greetingName: string = '';
 
+  // Variable para el texto del título animado
+  resultsTitleText: string = '';
+
   // Inyectar SearchService
   constructor(
     private authService: AuthService,
@@ -49,10 +67,6 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
-  // src/app/home/home.component.ts
-
-// ... (resto del código del componente)
 
   onSearch() {
     // Limpiar todos los errores al iniciar
@@ -77,36 +91,30 @@ export class HomeComponent implements OnInit {
     this.lastSearchQuery = this.searchQuery;
     this.lastSearchQuantity = this.quantity || 1;
     this.lastSearchMeasure = this.measure;
+
+    // Texto que se escribirá automáticamente
+    this.resultsTitleText = `Resultados para: ${this.lastSearchQuery} (${this.lastSearchQuantity} ${this.lastSearchMeasure})`;
+
     this.apiService.searchProducts(
       this.lastSearchQuery,
       this.lastSearchQuantity,
       this.lastSearchMeasure
     ).subscribe({
       next: (response: any) => {
-        // --- INICIO DE LA CORRECCIÓN CRÍTICA ---
-        // 1. Determinar el payload: response.data o la respuesta completa (response).
+
         const payload = response.data || response;
-
-        // 2. Extraer el array de resultados, usando un array vacío como fallback.
-        // Esto previene el error .map() en objetos nulos o indefinidos.
         const resultsArray = payload.results || [];
-
         const shortMeasure = this.getMeasureAbbreviation(this.lastSearchMeasure);
-
-        // 3. Mapear sobre el array de resultados (resultsArray), que ahora está garantizado como un array.
         this.results = resultsArray.map((result: any) => ({
           ...result,
           measureLabel: shortMeasure
         }));
-        // --- FIN DE LA CORRECCIÓN CRÍTICA ---
-
         // Ordenamos por precio
         this.results.sort((a, b) => a.price - b.price);
         // Limpiamos solo los campos principales del formulario
         this.searchQuery = '';
         this.quantity = 1;
         this.measure = '';
-
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -116,8 +124,6 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
-// ... (el resto del componente)
 
   private getMeasureAbbreviation(fullMeasure: string): string {
     const map: { [key: string]: string } = {

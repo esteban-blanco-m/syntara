@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterLink, RouterOutlet, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet, ActivatedRoute, ActivatedRouteSnapshot, ChildrenOutletContexts } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService, User } from './auth.service';
+import { routeAnimations } from './route-animations';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [routeAnimations]
 })
 export class AppComponent {
   title = 'syntara';
@@ -20,7 +22,8 @@ export class AppComponent {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private contexts: ChildrenOutletContexts
   ) {
     // Nos suscribimos a los cambios del usuario
     this.authService.currentUser$.subscribe(user => {
@@ -35,6 +38,10 @@ export class AppComponent {
       const hide = deepest?.data['hideHeaderLinks'] === true;
       this.showHeaderLinks = !hide;
     });
+  }
+ // // Obtener el nombre de la animación de la ruta actual
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
   }
 
   // SALIR DE LA SESIÓN

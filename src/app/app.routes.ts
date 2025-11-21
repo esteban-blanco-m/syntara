@@ -8,33 +8,34 @@ import { authGuard } from './auth.guard';
 import { HistoryComponent } from './history/history.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, data: { animation: 'HomePage' } },
   {
     path: 'login',
     component: LoginComponent,
-    data: { hideHeaderLinks: true }
+    data: { hideHeaderLinks: true, animation: 'LoginPage' }
   },
   {
     path: 'register',
     component: RegisterComponent,
-    data: { hideHeaderLinks: true }
+    data: { hideHeaderLinks: true, animation: 'RegisterPage' }
   },
   {
     path: 'subscription',
     component: SubscriptionComponent,
-    canActivate: [authGuard], //
-    data: { hideHeaderLinks: true }
+    canActivate: [authGuard],
+    data: { hideHeaderLinks: true, animation: 'SubscriptionPage' }
   },
   {
     path: 'payment',
     component: PaymentComponent,
-    canActivate: [authGuard], //
-    data: { hideHeaderLinks: true }
+    canActivate: [authGuard],
+    data: { hideHeaderLinks: true, animation: 'PaymentPage' }
   },
   {
     path: 'history',
     component: HistoryComponent,
-    canActivate: [authGuard] //
+    canActivate: [authGuard],
+    data: { animation: 'HistoryPage' }
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
